@@ -17,6 +17,11 @@ $GLOBALS['tables'] = [
     'user' => [
         'table_name' => 'user',
         'db_name'    => 'v_test',
+        'db_host'    => 'localhost',
+    ],
+    'orders' => [
+        'table_name' => 'orders',
+        'db_name'    => 'v_test',
         'db_host'    => 'localhost'
     ],
 ];
@@ -34,7 +39,7 @@ $GLOBALS['tables'] = [
  */
 $GLOBALS['db_hosts'] = [
     'localhost' => [
-        'host'     => '127.0.0.1',
+        'host'     => 'localhost',
         'username' => 'v_test',
         'password' => 'v_test',
         'link'     => null,

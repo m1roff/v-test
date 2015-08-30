@@ -17,6 +17,7 @@ if( userInfo() === false )
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Тестовое задание - заказы</title>
         <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/main.css" rel="stylesheet">
     </head>
     <body>
 
@@ -47,22 +48,38 @@ if( userInfo() === false )
         </nav>
 
 
+        <div class="container">
 
-
-
-
-
-        <div id="main_container" class="container">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div id="alerts_container">
+                        
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
             
+
+            <div id="main_container">
+                <div class="jumbotron">
+                    <center>
+                        <h1>ожидайте...</h1>
+                        <img src="/img/loader.gif" />
+                    </center>
+                </div>
+            </div>
         </div> <!-- /container -->
-
-
-
-
 
 
 
         <script src="/vendor/jquery/jquery-1.11.3.min.js"></script>
         <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/js/lib.js?<?=microtime(true)?>"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                content.get();
+            });
+        </script>
     </body>
 </html>

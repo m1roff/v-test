@@ -519,6 +519,30 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "protected/lib/helpers.php",
+			"settings":
+			{
+				"buffer_size": 1874,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "js/lib.js",
+			"settings":
+			{
+				"buffer_size": 1952,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "protected/views/customer/index.php",
+			"settings":
+			{
+				"buffer_size": 4222,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -721,7 +745,12 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/miroff/www_repos/v_localedit"
+		"/Users/miroff/Dropbox/www_repos/v_localedit",
+		"/Users/miroff/Dropbox/www_repos/v_localedit/js",
+		"/Users/miroff/Dropbox/www_repos/v_localedit/protected",
+		"/Users/miroff/Dropbox/www_repos/v_localedit/protected/lib",
+		"/Users/miroff/Dropbox/www_repos/v_localedit/protected/views",
+		"/Users/miroff/Dropbox/www_repos/v_localedit/protected/views/customer"
 	],
 	"file_history":
 	[
@@ -1111,8 +1140,102 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "protected/lib/helpers.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1874,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								144,
+								7
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "js/lib.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1952,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1301,
+								1312
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 581.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "protected/views/customer/index.php",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 4222,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 645.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],

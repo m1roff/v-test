@@ -8,5 +8,7 @@
                 admin
                 customer
                 performer
+
+    passwd <username> <new password> - Изменение пароля
     <?php
     echo "\n";

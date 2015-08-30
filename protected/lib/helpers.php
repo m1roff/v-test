@@ -1,5 +1,10 @@
 <?php
 
+function isAjaxRequest()
+{
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']==='XMLHttpRequest';
+}
+
 function showAlert($messages)
 {
     if(empty($messages)) return false;
@@ -52,6 +57,13 @@ function authUser($postData)
 }
 
 
+function getPerformers()
+{
+    $get = db_select('user', '*', 'type="performer"');
+    return $get;
+}
+
+
 
 
 
@@ -74,7 +86,7 @@ function authUser($postData)
  */
 function __try_auth_user($user, $passwd)
 {
-    $_user = db_select_row('user', '*', '`login`="'.__db_strip($user).'"');
+    $_user = db_select_row('user', '*', '`login`="'.__db_strip('user',$user).'"');
     if( empty($_user) || !password_verify($passwd, $_user['password']) ) 
     {
         return false;
