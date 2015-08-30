@@ -18,6 +18,12 @@ $GLOBALS['tables'] = [
         'table_name' => 'user',
         'db_name'    => 'v_test',
         'db_host'    => 'localhost',
+        'schema' => [
+            'cols' => [
+                'id_user' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+                'PRIMARY KEY (`id_user`)',
+            ]
+        ],
     ],
     'orders' => [
         'table_name' => 'orders',

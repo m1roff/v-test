@@ -128,6 +128,34 @@ function db_insert($table, Array $set, $id=false)
     
     return $_res;
 }
+
+function db_create_table($table, $columns, $options=null)
+{
+    $cols = [];
+    foreach( $columns as $name => $type )
+    {
+        if( is_string($name) )
+        {
+            $cols[] = '`'.$name.'` '.$type;
+        }
+        else
+        {
+            $cols[] = $type;
+        }
+    }
+    $q='CREATE TABLE '.__db_get_table_name($table).' ('.implode(', ',$cols).') ENGINE=InnoDB CHARSET=utf8';
+    if($options!==null) $q .= ' '.$options;
+    $q .=';';
+    $_res = __db_run($q, $table);
+
+    if(db_get_error($table)===false)
+    {
+        return true;
+    }
+    else 
+    {
+        return db_get_error($table);
+    }
 }
 
 function db_get_error($table)
@@ -175,6 +203,21 @@ function db_transaction_start()
     }
 }
 
+
+function db_table_exists($table)
+{
+    __db_check_all_configs($table); // TODO: !!! exception
+    $q = 'SELECT 1 FROM information_schema.TABLES WHERE TABLE_NAME="'.$GLOBALS['tables'][$table]['table_name'].'" AND TABLE_SCHEMA="'.$GLOBALS['tables'][$table]['db_name'].'";';
+    $_res = __db_run($q, $table);
+    
+    if( $_res !== false )
+    {
+        var_dump(mysqli_num_rows($_res));
+        mysqli_free_result($_res); 
+    }
+
+    // mysqli_close(__db_get_host_link($table));
+}
 
 
 // ============================== для локального использования

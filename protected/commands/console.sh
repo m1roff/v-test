@@ -25,6 +25,9 @@ switch($_command)
     case 'passwd':
         change_pass();
         break;
+    case 'migrate':
+        require_once(dirname(__FILE__).'/inc/migrate.inc.php');
+        exit;
 }
 
 

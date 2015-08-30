@@ -10,5 +10,10 @@
                 performer
 
     passwd <username> <new password> - Изменение пароля
+
+    migrate <subcommand> - Запуск миграции с указанной подкомандой
+        Где:
+            <subcommand> - по умолчанию tables
+                tables - устанавливает таблицы
     <?php
     echo "\n";
