@@ -75,18 +75,21 @@ function order_create($data)
 function order_finish($data)
 {
     db_transaction_start();
+    // TODO: Пока что не известно что выводить
     $return = [];
     $upd = [
-        'status' => 1
+        'orders.status' => '1'
     ];
     $_res = db_update('orders', $upd, 'orders.id_performer=:idUser AND orders.status = "0" AND orders.id_orders=:idOrders', [':idUser'=>userInfo('id_user'), ':idOrders'=>$data['ofin']] );
     if($_res)
     {
-        db_transaction_rollback();
-        // db_transaction_commit();
+        db_transaction_commit();
     }
     else 
     {
+        
+        $return['message'] = db_get_error('orders');
+        header("HTTP/1.0 406 ".$return['message']);
         db_transaction_rollback();
     }
     echo json_encode($return);

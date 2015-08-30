@@ -24,18 +24,21 @@
 
      jQuery(document).on('click', 'button[ofin]',function(){
         var ofin = jQuery(this).attr('ofin');
-        var line = jQuery('tr[line="'+ofin+'"]');
+        var $line = jQuery('tr[line="'+ofin+'"]');
+        var $button = jQuery('button[ofin="'+ofin+'"]', $line);
 
-        // forWait('wait', ofin);
         jQuery('#alerts_container').empty();
-        jQuery(line).addClass('info');
-        jQuery('button[ofin="'+ofin+'"]', line).attr('disabled', true).after('<img ofin-loader="'+ofin+'" src="/img/loader_25.gif"/>');
+        $line.removeClass().addClass('info');
+        $button.attr('disabled', true).css({'width': $button.outerWidth() }).html('<img src="/img/preloader.gif" />');
 
 
         content.action('finish_order', {ofin:ofin}, function(data, status, xhr){
-
+            $button.removeClass().addClass('btn btn-success').css('width', 'auto').html('success');
+            $line.removeClass().addClass('success');
         }, function(xhr, statusText, errorThrown){
             alert.put('#alerts_container', errorThrown, 'danger');
+            $button.removeClass().addClass('btn btn-danger').html($button.attr('value')).attr('disabled', false);
+            $line.removeClass().addClass('danger');
         });
         return true;
     });

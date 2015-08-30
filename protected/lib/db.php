@@ -65,8 +65,7 @@ function db_select($table, $fields='*', $cond=null, $end=null, Array $join=array
         }
         mysqli_free_result($_res); 
     }
-
-    if(!__db_is_transaction()) mysqli_close(__db_get_host_link($table));
+    // if(!__db_is_transaction($table)) mysqli_close(__db_get_host_link($table));
     return $data;
 }
 
@@ -82,14 +81,14 @@ function db_update($table, Array $upd, $cond, Array $cond_params=array())
         $cond = strtr($cond, $cond_params );
     }
 
-    $q = 'UPDATE '.__db_get_table_name($table).' SET '
+    $q = 'UPDATE '.__db_get_table_name($table).' `'.$table.'` SET '
         .' '.__db_str_value($table, $upd)
         .' WHERE '.$cond; //TODO;
     $_res = __db_run($q, $table);
 
-    if(!__db_is_transaction()) mysqli_close(__db_get_host_link($table));
+    // if(!__db_is_transaction($table)) mysqli_close(__db_get_host_link($table));
 
-    return $_res;
+    return (bool)mysqli_affected_rows(__db_get_host_link($table));
 }
 
 // TODO: mv
@@ -98,7 +97,9 @@ function __db_str_value($table, Array $fields)
     $_s = [];
     while( list($field, $value) = each($fields) )
     {
-        $_s[] = '`'.__db_fields_strip($table, $field).'` = "'.__db_fields_strip($table, $value).'"';
+        $field = __db_fields_strip($table, $field);
+        $field = strtr($field, array('.'=>'`.`'));
+        $_s[] = '`'.$field.'` = "'.__db_fields_strip($table, $value).'"';
     }
     return implode(', ', $_s);
 }
@@ -124,10 +125,9 @@ function db_insert($table, Array $set, $id=false)
     }
 
 
-    if(!__db_is_transaction())  mysqli_close(__db_get_host_link($table));
+    // if(!__db_is_transaction($table))  mysqli_close(__db_get_host_link($table));
     
     return $_res;
-}
 }
 
 function db_get_error($table)
@@ -197,7 +197,6 @@ function __db_run($query, $table)
     }
 
     __db_start_transaction($table);
-    // var_dump($query);
     return mysqli_query(__db_get_host_link($table), $query);
 }
 
@@ -222,11 +221,9 @@ function __db_action_transaction($action)
     {
         for($i=count($GLOBALS['mysql']['tables'])-1; $i>=0; --$i)
         {
-            // var_dump($action);
             $_res = $action(__db_get_host_link($GLOBALS['mysql']['tables'][$i]));
-            // var_dump($_res);
         }
-        mysqli_close(__db_get_host_link($table));
+        // mysqli_close(__db_get_host_link($table));
         unset($GLOBALS['mysql']['transaction'], $GLOBALS['mysql']['tables']);
     }
 }
@@ -291,7 +288,7 @@ function __db_get_host_link($table)
     {
         $_host['link'] = mysqli_connect($_host['host'], $_host['username'], $_host['password']);
 
-        if( mysqli_connect_errno() )
+        if( mysqli_connect_errno() || !$_host['link'] )
         {
             throw new Exception('Ошибка подключения к БД. ('.mysqli_connect_error().')');  // TODO:
         }
@@ -313,7 +310,7 @@ function __db_join_join(Array $join)
 
         if(isset($params['type'])) $_joinType=$params['type'];
 
-        $_q .= ' '.$_joinType.' JOIN `'.__db_get_table_name($tableAlias).'` as '.$GLOBALS['tables'][$tableAlias]['table_name'];
+        $_q .= ' '.$_joinType.' JOIN '.__db_get_table_name($tableAlias).' as '.$GLOBALS['tables'][$tableAlias]['table_name'];
         $_q .= ' ON ('.$params['on'].')';
     }
     return $_q;

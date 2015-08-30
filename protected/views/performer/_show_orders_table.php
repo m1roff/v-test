@@ -13,7 +13,7 @@ else
             <td><?=$data[$i]['amount']?></td>
             <td><?=$data[$i]['date_created']?></td>
             <td>
-                <button type="button" class="btn btn-info btn-sm" ofin="<?=$data[$i]['id_orders']?>">выполнить</button>
+                <button type="button" class="btn btn-info btn-sm" ofin="<?=$data[$i]['id_orders']?>" value="выполнить">выполнить</button>
             </td>
         </tr><?
     }

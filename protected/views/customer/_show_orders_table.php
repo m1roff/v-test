@@ -9,7 +9,7 @@ else
 
     for($i=0; $i<$_dataCount; ++$i)
     {
-        $_tr_class = $data[$i]['status']==1 ? 'success' : 'warning';
+        $_tr_class = $data[$i]['status']==1 ? 'success' : null;
         ?><tr class="<?=$_tr_class?>">
             <td><?=$data[$i]['id_orders']?></td>
             <td><?=$data[$i]['amount']?></td>
