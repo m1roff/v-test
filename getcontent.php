@@ -83,11 +83,6 @@ function customer_show_orders(Array $data=array())
             ),
         )
     );
-    if(empty($data))
-    {
-        header("HTTP/1.0 400 ".db_get_error('orders'));
-        exit;
-    }
     require(dirname(__FILE__).'/protected/views/customer/_show_orders_table.php');
 }
 
@@ -124,11 +119,6 @@ function performer_show_orders(Array $data=array())
         'orders.status="0" AND orders.id_performer='.userInfo('id_user'), 
         'order by orders.date_created asc, orders.id_orders asc limit '.$offset.','.$limit
     );
-    if(empty($data))
-    {
-        header("HTTP/1.0 400 ".db_get_error('orders'));
-        exit;
-    }
     require(dirname(__FILE__).'/protected/views/performer/_show_orders_table.php');
 }
 
