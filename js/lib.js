@@ -1,4 +1,4 @@
-var content = function()
+function content2()
 {
     var main_container = '#main_container';
 
@@ -6,8 +6,6 @@ var content = function()
 
     function _onSuccess(data, status, xhr)
     {
-        console.log('_onSuccess:', data, status, xhr);
-
         if(!success_data_place) success_data_place = main_container;
 
         jQuery(success_data_place).html(data);
@@ -15,16 +13,14 @@ var content = function()
 
     function _onError(xhr, statusText, errorThrown)
     {
-        console.log('_onError:', xhr, statusText, errorThrown);
         alert.put('#alerts_container', errorThrown, 'danger')
     }
 
-    return {
-        get : function(pageName, pageData, place)
+    this.get = function(pageName, pageData, place)
         {
             if(place) success_data_place = place;
-            // jQuery.ajax('/getcontent.php', pageData, _onSuccess, 'html');
-            jQuery.ajax('/getcontent.php', {
+                else success_data_place = null;
+            return jQuery.ajax('/getcontent.php', {
                 'cache' : false,
                 'dataType' : 'html',
                 'method' : 'POST',
@@ -32,8 +28,8 @@ var content = function()
                 'error' : _onError,
                 'data' : {'page_name': pageName, 'page_data': pageData}
             });
-        },
-        action : function(action, data, onSuccessFn, onErrorFn)
+        };
+    this.action = function(action, data, onSuccessFn, onErrorFn)
         {
             return jQuery.ajax('/action.php', {
                 'cache' : false,
@@ -43,9 +39,9 @@ var content = function()
                 'error' : onErrorFn,
                 'data' : {'action': action, 'data': data}
             });
-        }
-    };
-}();
+        };
+    return this;
+};
 
 
 var alert = function()
@@ -64,3 +60,5 @@ var alert = function()
         }
     }
 }();
+
+

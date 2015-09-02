@@ -1,10 +1,24 @@
 <?php
+/**
+ * Набор вспомогательный ф-ий
+ */
 
+
+
+/**
+ * Проверка запроса на !|ajax
+ * @return bool
+ */
 function isAjaxRequest()
 {
     return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']==='XMLHttpRequest';
 }
 
+/**
+ * Показ сообщений (алерт)
+ * @todo Тип сообщения
+ * @param mixed Сообщение. Так же принимает индексированный массив
+ */
 function showAlert($messages)
 {
     if(empty($messages)) return false;
@@ -15,12 +29,30 @@ function showAlert($messages)
     include(dirname(__FILE__).'/../views/_alert.php');
 }
 
-function userInfo($row=null)
+/**
+ * Получить информацию о текущем (авторизованном) пользователе
+ * Первое значение устанавливается в {@link __try_auth_user()}
+ * @param string $row Если необходимо получить конкретное поле
+ * @param bool $force Обновить информаицю перед получаением. Используется только вмете с $row
+ * @return mixed
+ */
+function userInfo($row=null, $force=false)
 {
     if(!isset($_SESSION['user'])) return false;
     if( $row!==null )
     {
-        if(isset($_SESSION['user'][$row])) return $_SESSION['user'][$row];
+        if(isset($_SESSION['user'][$row])) 
+        {
+            if($force===true)
+            {
+                $_res = (db_select_row('user', $row,'id_user='.$_SESSION['user']['id_user']));
+                if($_res)
+                {
+                    $_SESSION['user'][$row] = $_res[$row];
+                }
+            }
+            return $_SESSION['user'][$row];
+        }
         return false;
     }
 
@@ -56,7 +88,10 @@ function authUser($postData)
     return true;
 }
 
-
+/**
+ * Получить всех исполнителей
+ * @return Array
+ */
 function getPerformers()
 {
     $get = db_select('user', '*', 'type="performer"');

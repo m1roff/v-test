@@ -70,23 +70,20 @@ $_dataPerformers = getPerformers();
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        content.get('customer_orders', null, '#customerOrdersTable > tbody')
+        content2().get('customer_orders', null, '#customerOrdersTable > tbody')
     });
 
     jQuery('#newOrder').on('hidden.bs.modal', function (e) {
-        console.log('modal hide');
     })
 
     jQuery('#btnCreateOrder').on('click', function(){
         newOrderWait('wait');
-        content.action('create_order', jQuery('#createOrder').serialize(), function(data, status, xhr){
-            console.log('onSuccess:', data, status, xhr);
-            content.get('customer_orders', null, '#customerOrdersTable > tbody')
+        content2().action('create_order', jQuery('#createOrder').serialize(), function(data, status, xhr){
+            content2().get('customer_orders', null, '#customerOrdersTable > tbody')
             alert.put('#newOrderMessages', data.message, 'success');
             newOrderWait('complete');
             jQuery('input, select', '#createOrder').val('');
         }, function(xhr, statusText, errorThrown){
-            console.log('onError:', xhr, statusText, errorThrown)
             alert.put('#newOrderMessages', errorThrown, 'danger')
             newOrderWait('complete');
         });

@@ -78,7 +78,7 @@ if( userInfo() === false )
         <script src="/js/lib.js?<?=microtime(true)?>"></script>
         <script type="text/javascript">
             jQuery(document).ready(function(){
-                content.get();
+                content2().get();
             });
         </script>
     </body>

@@ -1,5 +1,9 @@
 
 <div class="row">
+    Баланс: <span class="badge" id="performerBalanceDisplay"></span>
+</div>
+
+<div class="row">
     <table class="table table-striped table-hover" id="performerOrdersTable">
         <thead>
             <tr>
@@ -17,9 +21,23 @@
 
 
 <script type="text/javascript">
-    jQuery(document).ready(function(){
-        content.get('performer_orders', null, '#performerOrdersTable > tbody')
+    var pBalance = function()
+    {
+        var $carrier = jQuery('#performerBalanceDisplay');
+        var $content = new content2();
 
+        return {
+            get : function()
+            {
+                $carrier.html('<img src="/img/preloader.gif" />');
+                $content.get('performer_balance', {}, $carrier);
+            }
+        }
+    }();
+
+    jQuery(document).ready(function(){
+        content2().get('performer_orders', null, '#performerOrdersTable > tbody')
+        pBalance.get();
     });
 
      jQuery(document).on('click', 'button[ofin]',function(){
@@ -32,16 +50,20 @@
         $button.attr('disabled', true).css({'width': $button.outerWidth() }).html('<img src="/img/preloader.gif" />');
 
 
-        content.action('finish_order', {ofin:ofin}, function(data, status, xhr){
+        content2().action('finish_order', {ofin:ofin}, function(data, status, xhr){
             $button.removeClass().addClass('btn btn-success').css('width', 'auto').html('success');
             $line.removeClass().addClass('success');
+            pBalance.get();
         }, function(xhr, statusText, errorThrown){
             alert.put('#alerts_container', errorThrown, 'danger');
             $button.removeClass().addClass('btn btn-danger').html($button.attr('value')).attr('disabled', false);
             $line.removeClass().addClass('danger');
         });
+
         return true;
     });
+
+
 
      function forWait(action, ofin)
      {
