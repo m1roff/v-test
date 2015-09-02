@@ -18,6 +18,7 @@
         </tbody>
     </table>
 </div>
+<div class="row pagination_carrier"></div>
 
 
 <script type="text/javascript">
@@ -37,10 +38,17 @@
 
     jQuery(document).ready(function(){
         content2().get('performer_orders', null, '#performerOrdersTable > tbody')
+        content2().get('performer_pagination', null, '.pagination_carrier')
         pBalance.get();
     });
 
-     jQuery(document).on('click', 'button[ofin]',function(){
+    // Paginations
+    jQuery(document).on('click', paging().pagingClass(), function(){
+        paging().to(this, 'performer_orders', '#performerOrdersTable > tbody');
+    });
+
+    // Order action
+    jQuery(document).on('click', 'button[ofin]',function(){
         var ofin = jQuery(this).attr('ofin');
         var $line = jQuery('tr[line="'+ofin+'"]');
         var $button = jQuery('button[ofin="'+ofin+'"]', $line);

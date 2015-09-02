@@ -22,6 +22,8 @@ $_dataPerformers = getPerformers();
     </table>
 </div>
 
+<div class="row pagination_carrier"></div>
+
 
 
 
@@ -71,11 +73,18 @@ $_dataPerformers = getPerformers();
 <script type="text/javascript">
     jQuery(document).ready(function(){
         content2().get('customer_orders', null, '#customerOrdersTable > tbody')
+        content2().get('customer_pagination', null, '.pagination_carrier')
+    });
+
+    // Paginations
+    jQuery(document).on('click', paging().pagingClass(), function(){
+        paging().to(this, 'customer_orders', '#customerOrdersTable > tbody');
     });
 
     jQuery('#newOrder').on('hidden.bs.modal', function (e) {
     })
 
+    // Orders action
     jQuery('#btnCreateOrder').on('click', function(){
         newOrderWait('wait');
         content2().action('create_order', jQuery('#createOrder').serialize(), function(data, status, xhr){

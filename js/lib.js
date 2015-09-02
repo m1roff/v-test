@@ -1,3 +1,27 @@
+function paging()
+{
+    function __removeAllActive()
+    {
+        jQuery('.order_paging.active').removeClass('active');
+    }
+
+    this.pagingClass = function()
+    {
+        return '.order_paging:not(.active) > a';
+    }
+
+    this.to = function(obj, action, place)
+    {
+        var $Obj = jQuery(obj);
+        var offset = $Obj.attr('value');
+        __removeAllActive();
+        $Obj.parent('li').addClass('active');
+        
+        content2().get(action, {offset: offset}, place);
+    }
+    return this;
+};
+
 function content2()
 {
     var main_container = '#main_container';
@@ -7,7 +31,6 @@ function content2()
     function _onSuccess(data, status, xhr)
     {
         if(!success_data_place) success_data_place = main_container;
-
         jQuery(success_data_place).html(data);
     }
 

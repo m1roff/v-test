@@ -10,5 +10,9 @@
                 performer
 
     passwd <username> <new password> - Изменение пароля
+
+    fillorders <amount> - Создание рэндомных заказов
+        Где:
+            <amount> - Кол-во заказов.
     <?php
     echo "\n";

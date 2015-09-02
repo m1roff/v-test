@@ -25,6 +25,9 @@ switch($_command)
     case 'passwd':
         change_pass();
         break;
+    case 'fillorders':
+        fillorders();
+        break;
 }
 
 
@@ -71,6 +74,60 @@ function __show_message($msg, $type='error', $prefix=true)
     {
         echo "{$_strStart}{$msg}\e[0m\n\n";
     }
+}
+
+function fillorders()
+{
+    global $argc, $argv;
+    require_once(dirname(__FILE__).'/../lib/db.php');
+    $_maxamount = 1000000; // Страховка
+    $_amount = isset($argv[2]) ? (int)$argv[2] : null;
+    if(empty($_amount))
+    {
+        __show_message('Укажите необходимое кол-во заказов.');
+        exit;
+    }
+    elseif($_amount > $_maxamount)
+    {
+        __show_message('Укажите меньшее кол-во заказов. (макс.'.$_maxamount.')');
+        exit;
+    }
+
+    $_performers = db_select('user','id_user', 'type="performer"');
+    if(empty($_performers))
+    {
+        __show_message('Не найдены исполнители.');
+        exit;
+    }
+
+    $_customers = db_select('user','id_user', 'type="customer"');
+    if(empty($_customers))
+    {
+        __show_message('Не найдены заказчики.');
+        exit;
+    }
+
+    __show_message('создадим '.$_amount.'шт. заказа.', 'info');
+    for($i=0; $i<$_amount; ++$i)
+    {
+        $_set = array(
+            'id_customer'  => $_customers[array_rand($_customers,1)]['id_user'],
+            'id_performer' => $_performers[array_rand($_performers,1)]['id_user'],
+            'amount'       => rand(10,99999),
+            'status'       => 0,
+        );
+        $_res = db_insert('orders', $_set);
+        if(!$_res)
+        {
+            __show_message(db_get_error('orders'));
+            exit;
+        }
+        else
+        {
+            __show_message('Заказ '.($i+1).' создан.','info');
+        }
+    }
+    __show_message('все создано.', 'info');
 }
 
 function change_pass()
