@@ -2,13 +2,13 @@
 /**
  * Вью для показа пагинации на страницах
  */
-if(empty($limit))
+if(!isset($limit))
 {
     header("HTTP/1.0 400 Pagination: limit is not defined.");
     exit;
 }
 
-if(empty($total))
+if(!isset($total))
 {
     header("HTTP/1.0 400 Pagination: total is not defined.");
     exit;

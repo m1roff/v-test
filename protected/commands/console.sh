@@ -28,6 +28,9 @@ switch($_command)
     case 'fillorders':
         fillorders();
         break;
+    case 'truncatedb':
+        truncatedb();
+        break;
 }
 
 
@@ -74,6 +77,16 @@ function __show_message($msg, $type='error', $prefix=true)
     {
         echo "{$_strStart}{$msg}\e[0m\n\n";
     }
+}
+
+function truncatedb()
+{
+    require_once(dirname(__FILE__).'/../lib/db.php');
+    $q = 'TRUNCATE TABLE '.__db_get_table_name('orders').';';
+    __db_run($q, 'orders');
+    __show_message('orders table truncated.', 'info');
+    db_update('user', ['balance'=>0], 'user.balance > 0');
+    __show_message('balances nulled.', 'info');
 }
 
 function fillorders()

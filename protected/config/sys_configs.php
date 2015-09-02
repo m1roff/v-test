@@ -29,12 +29,12 @@ $GLOBALS['tables'] = [
     'user' => [
         'table_name' => 'user',
         'db_name'    => 'v_test',
-        'db_host'    => 'localhost',
+        'db_host'    => (gethostname()=='wsdebian' ? '192.168.10.15' : 'localhost'),
     ],
     'orders' => [
         'table_name' => 'orders',
         'db_name'    => 'v_test',
-        'db_host'    => 'localhost'
+        'db_host'    => (gethostname()=='wsdebian' ? '192.168.10.15' : 'localhost')
     ],
 ];
 
@@ -52,6 +52,12 @@ $GLOBALS['tables'] = [
 $GLOBALS['db_hosts'] = [
     'localhost' => [
         'host'     => 'localhost',
+        'username' => 'v_test',
+        'password' => 'v_test',
+        'link'     => null,
+    ],
+    '192.168.10.15' => [
+        'host'     => '192.168.10.15',
         'username' => 'v_test',
         'password' => 'v_test',
         'link'     => null,
