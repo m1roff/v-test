@@ -8,5 +8,13 @@
                 admin
                 customer
                 performer
+
+    passwd <username> <new password> - Изменение пароля
+
+    fillorders <amount> - Создание рэндомных заказов
+        Где:
+            <amount> - Кол-во заказов.
+    
+    truncatedb - Обнулить БД. Удаляет все заказы, обнуляет баланс у всех пользователей.
     <?php
     echo "\n";

@@ -1,5 +1,8 @@
 #!/usr/bin/php
 <?php
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
+error_reporting(-1);
 
 $_help = ['-h'];
 if( $argc < 2 || in_array($argv, $_help) )
@@ -19,6 +22,15 @@ switch($_command)
     case 'adduser':
         add_user();
         break;
+    case 'passwd':
+        change_pass();
+        break;
+    case 'fillorders':
+        fillorders();
+        break;
+    case 'truncatedb':
+        truncatedb();
+        break;
 }
 
 
@@ -34,21 +46,27 @@ function __show_help()
     echo "\e[0m";
 }
 
-function __show_message($msg, $type='error')
+function __show_message($msg, $type='error', $prefix=true)
 {
     $_strStart = null;
     switch($type)
     {
         case 'error':
-            $_strStart = "\e[0;31m[error]";
+            $_strStart = "\e[0;31m";
+            if($prefix) $_strStart .= '[error]: ';
             break;
         case 'success':
-            $_strStart = "\e[0;32m[success]";
+            $_strStart = "\e[0;32m";
+            if($prefix) $_strStart .= '[success]: ';
+            break;
+        case 'info':
+            $_strStart = "\e[0;36m";
+            if($prefix) $_strStart .= '[info]: ';
             break;
     }
     if( is_array($msg) )
     {
-        echo "{$_strStart}:\n";
+        echo "{$_strStart}\n";
         for($i=0, $max=count($msg); $i<$max; ++$i)
         {
             echo "\t {$msg[$i]}\n";
@@ -57,7 +75,109 @@ function __show_message($msg, $type='error')
     }
     else
     {
-        echo "{$_strStart}: {$msg}\e[0m\n\n";
+        echo "{$_strStart}{$msg}\e[0m\n\n";
+    }
+}
+
+function truncatedb()
+{
+    require_once(dirname(__FILE__).'/../lib/db.php');
+    $q = 'TRUNCATE TABLE '.__db_get_table_name('orders').';';
+    __db_run($q, 'orders');
+    __show_message('orders table truncated.', 'info');
+    db_update('user', ['balance'=>0], 'user.balance > 0');
+    __show_message('balances nulled.', 'info');
+}
+
+function fillorders()
+{
+    global $argc, $argv;
+    require_once(dirname(__FILE__).'/../lib/db.php');
+    $_maxamount = 1000000; // Страховка
+    $_amount = isset($argv[2]) ? (int)$argv[2] : null;
+    if(empty($_amount))
+    {
+        __show_message('Укажите необходимое кол-во заказов.');
+        exit;
+    }
+    elseif($_amount > $_maxamount)
+    {
+        __show_message('Укажите меньшее кол-во заказов. (макс.'.$_maxamount.')');
+        exit;
+    }
+
+    $_performers = db_select('user','id_user', 'type="performer"');
+    if(empty($_performers))
+    {
+        __show_message('Не найдены исполнители.');
+        exit;
+    }
+
+    $_customers = db_select('user','id_user', 'type="customer"');
+    if(empty($_customers))
+    {
+        __show_message('Не найдены заказчики.');
+        exit;
+    }
+
+    __show_message('создадим '.$_amount.'шт. заказа.', 'info');
+    for($i=0; $i<$_amount; ++$i)
+    {
+        $_set = array(
+            'id_customer'  => $_customers[array_rand($_customers,1)]['id_user'],
+            'id_performer' => $_performers[array_rand($_performers,1)]['id_user'],
+            'amount'       => rand(10,99999),
+            'status'       => 0,
+        );
+        $_res = db_insert('orders', $_set);
+        if(!$_res)
+        {
+            __show_message(db_get_error('orders'));
+            exit;
+        }
+        else
+        {
+            __show_message('Заказ '.($i+1).' создан.','info');
+        }
+    }
+    __show_message('все создано.', 'info');
+}
+
+function change_pass()
+{
+    global $argc, $argv;
+    require_once(dirname(__FILE__).'/../lib/db.php');
+    $_login = isset($argv[2]) ? $argv[2] : null;
+    $_passwd   = isset($argv[3]) ? $argv[3] : null;
+
+    $_err = [];
+    if(empty($_login))
+    {
+        $_err[] = 'Укажите пользователя';
+    }
+
+    if(empty($_passwd))
+    {
+        $_err[] = 'Укажите пароль для пользователя';
+    }
+
+    if( !empty($_err) )
+    {
+        __show_message($_err);
+    }
+    else
+    {
+        $_upd = array(
+            'password' => password_hash($_passwd, PASSWORD_BCRYPT),
+        );
+        $res = db_update('user', $_upd, 'login="'.__db_strip('user', $_login).'"');
+        if( !$res )
+        {
+            __show_message(db_get_error('user'));
+            die();
+        }
+
+        __show_message('Password of user "'.$_login.'" updated.', 'success');
     }
 }
 
